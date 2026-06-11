@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Metric/Imperial Converter</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/public/style.css" />
+  </head>
+
+  <body>
+    <main>
+      <h1>Metric/Imperial Converter</h1>
+
+      <section>
+        <h2>Example usage</h2>
+        <p><code>/api/convert?input=4gal</code></p>
+        <p><code>/api/convert?input=1/2km</code></p>
+        <p><code>/api/convert?input=5.4/3lbs</code></p>
+        <p><code>/api/convert?input=kg</code></p>
+      </section>
+
+      <section>
+        <h2>Example return</h2>
+        <p>
+          <code>
+            { initNum: 3.1, initUnit: 'mi', returnNum: 4.98895,
+            returnUnit: 'km', string: '3.1 miles converts to 4.98895
+            kilometers' }
+          </code>
+        </p>
+      </section>
+
+      <section>
+        <h2>Front-End</h2>
+
+        <input
+          id="convertField"
+          type="text"
+          placeholder="Ejemplo: 42mi"
+        />
+
+        <button id="convert">Convertir</button>
+
+        <p id="result"></p>
+        <p id="jsonResult"></p>
+      </section>
+    </main>
+
+    <script>
+      const boton = document.getElementById('convert');
+      const campo = document.getElementById('convertField');
+      const resultado = document.getElementById('result');
+      const resultadoJson = document.getElementById('jsonResult');
+
+      boton.addEventListener('click', function () {
+        const input = campo.value;
+
+        fetch('/api/convert?input=' + input)
+          .then(function (respuesta) {
+            return respuesta.text();
+          })
+          .then(function (datos) {
+            try {
+              const json = JSON.parse(datos);
+
+              resultado.textContent = json.string;
+              resultadoJson.textContent = JSON.stringify(json);
+            } catch (error) {
+              resultado.textContent = datos;
+              resultadoJson.textContent = JSON.stringify(datos);
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
